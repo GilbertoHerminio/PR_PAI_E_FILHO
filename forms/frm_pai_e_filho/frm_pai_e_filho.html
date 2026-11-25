@@ -1,0 +1,742 @@
+<html>
+
+<head>
+    <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide-flat.min.css" />
+
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+
+    <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="libPai_e_Filho.js" charset="utf-8"></script>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.38.5/dist/skin-win8/ui.fancytree.min.css">
+
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.38.5/dist/jquery.fancytree-all-deps.min.js"></script>
+
+</head>
+
+<body>
+
+    <style>
+        #myTreeview {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+            min-height: 150px;
+        }
+
+
+        .tooltip-container {
+            position: relative;
+            display: block;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+
+            background-color: #333;
+            color: #fff;
+
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 5px;
+
+            position: absolute;
+            z-index: 9999;
+
+            bottom: 110%;
+            left: 0;
+
+            width: 250px;
+
+            font-size: 12px;
+
+            transition: opacity 0.3s;
+        }
+
+        /* Exibe quando passar o mouse */
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+
+    <div class="fluig-style-guide">
+
+        <form name="form" role="form">
+
+            <div class="panel panel-info">
+
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">
+
+                        <i class="flaticon flaticon-system-tools icon-xl" aria-hidden="true"></i>
+                        Cadastro de Colaboradores
+                    </h3>
+
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <label for="descricaoCadastro">Descrição do Cadastro</label>
+                            <input type="text" name="descricaoCadastro" id="descricaoCadastro" class="form-control"
+                                placeholder="Digite uma descrição" maxlength="100" required>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 form-group">
+
+                            <label for="quantidadeFuncionarios">Quantidade</label>
+                            <input type="number" name="quantidadeFuncionarios" id="quantidadeFuncionarios"
+                                class="form-control" min="1" max="100" placeholder="Informe a quantidade">
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label for="dataCadastro">Dt Cadastro</label>
+                            <input type="date" name="dataCadastro" id="dataCadastro" class="form-control">
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+
+                            <label for="emailResponsavel">E-mail do Responsável</label>
+                            <input type="email" name="emailResponsavel" id="emailResponsavel" class="form-control"
+                                placeholder="usuario@empresa.com">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" name="telefone" id="telefone" class="form-control"
+                                placeholder="(14) 99999-9999">
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <label id="lblTipoDepartamento">Departamento</label>
+
+                            <select name="departamento" id="departamento" class="form-control"
+                                onchange="departamentoChange(this);">
+
+                                <option value="">Selecione...</option>
+                                <option value="TI">Tecnologia da Informação</option>
+                                <option value="RH">Recursos Humanos</option>
+                                <option value="FIN">Financeiro</option>
+                                <option value="OPER">Operações</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label id="lblAceitaAcordo">Aceita o Acordo</label>
+
+                            <div class="checkbox">
+
+                                <label>
+                                    <input type="checkbox" name="aceitaAcordo" value="SIM"
+                                        onchange="aceitaAcordoChange(this);">
+                                    Aceito o Acordo
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 form-group">
+
+                            <label id="lblTipoContratacao">Tipo de Contratação</label>
+
+                            <div class="radio">
+
+                                <label>
+                                    <input type="radio" name="tipoContratacao" onchange="candidatoChange(this);"
+                                        value="CLT">
+                                    CLT
+                                </label>
+
+                            </div>
+
+                            <div class="radio">
+
+                                <label>
+                                    <input type="radio" name="tipoContratacao" onchange="candidatoChange(this);"
+                                        value="PJ">
+                                    PJ
+                                </label>
+
+                            </div>
+
+                            <div class="radio">
+
+                                <label>
+                                    <input type="radio" name="tipoContratacao" onchange="candidatoChange(this);"
+                                        value="EST">
+                                    Estagiário
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 form-group">
+
+                            <label>Benefícios</label>
+
+                            <div class="checkbox">
+
+                                <label>
+                                    <input type="checkbox" name="beneficioVR" value="SIM">
+                                    Vale Refeição
+                                </label>
+
+                            </div>
+
+                            <div class="checkbox">
+
+                                <label>
+                                    <input type="checkbox" name="beneficioVT" value="SIM">
+                                    Vale Transporte
+                                </label>
+
+                            </div>
+
+                            <div class="checkbox">
+
+                                <label>
+                                    <input type="checkbox" name="beneficioPlano" value="SIM">
+                                    Plano de Saúde
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <div class="form-group">
+
+                                <label>Selecione a Aba</label>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="radioAbas" value="aba1" onchange="navegarAba(this);">
+                                        Aba1
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="radioAbas" value="aba2" onchange="navegarAba(this);">
+                                        Aba2
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="radioAbas" value="aba3" onchange="navegarAba(this);">
+                                        Aba3
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <div id="componenteAbas">
+
+                                <!-- MENU DAS ABAS -->
+
+                                <ul class="nav nav-tabs">
+
+                                    <li class="active">
+                                        <a href="#aba1" data-toggle="tab">Aba 1</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#aba2" data-toggle="tab">Aba 2</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#aba3" data-toggle="tab">Aba 3</a>
+                                    </li>
+
+                                </ul>
+
+                                <!-- CONTEÚDO DAS ABAS -->
+
+                                <div class="tab-content">
+
+                                    <div class="tab-pane active" id="aba1">
+                                        <h3>Conteúdo da Aba 1</h3>
+                                        <p>Campos e informações da primeira aba.</p>
+                                    </div>
+
+                                    <div class="tab-pane" id="aba2">
+                                        <h3>Conteúdo da Aba 2</h3>
+                                        <p>Campos e informações da segunda aba.</p>
+                                    </div>
+
+                                    <div class="tab-pane" id="aba3">
+                                        <h3>Conteúdo da Aba 3</h3>
+                                        <p>Campos e informações da terceira aba.</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <label>Solicitação</label>
+
+                            <div class="dropdown">
+
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                    id="btnTipoSolicitacao">
+
+                                    Selecione uma opção
+                                    <span class="caret"></span>
+
+                                </button>
+
+                                <ul class="dropdown-menu">
+
+                                    <li>
+                                        <a href="#"
+                                            onclick="selecionarTipo('USUARIO', 'Cadastro de usuário'); return false;">
+                                            <i class="fluigicon fluigicon-user fluigicon-md"></i>
+                                            Cadastro de usuário
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#"
+                                            onclick="selecionarTipo('DOCUMENTO', 'Solicitação de documento'); return false;">
+                                            <i class="fluigicon fluigicon-file fluigicon-md"></i>
+                                            Solicitação de documento
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" onclick="selecionarTipo('TI', 'Suporte de TI'); return false;">
+                                            <i class="fluigicon fluigicon-desktop fluigicon-md"></i>
+                                            Suporte de TI
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <input type="hidden" id="tipoSolicitacao" name="tipoSolicitacao">
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <label>Clique nos Botões</label>
+
+                            <div class="switch switch-primary">
+                                <input name="switch1" class="switch-input" type="checkbox" id="switch-1-1" />
+                                <label class="switch-button" for="switch-1-1">Toggle</label>
+                            </div>
+
+                            <div class="switch switch-success">
+                                <input name="switch2" class="switch-input" type="checkbox" id="switch-1-2" />
+                                <label class="switch-button" for="switch-1-2">Toggle</label>
+                            </div>
+
+                            <div class="switch switch-info">
+                                <input name="switch3" class="switch-input" type="checkbox" id="switch-1-3" />
+                                <label class="switch-button" for="switch-1-3">Toggle</label>
+                            </div>
+
+                            <div class="switch switch-warning">
+                                <input name="switch4" class="switch-input" type="checkbox" id="switch-1-4" />
+                                <label class="switch-button" for="switch-1-4">Toggle</label>
+                            </div>
+
+                            <div class="switch switch-danger">
+                                <input name="switch5" class="switch-input" type="checkbox" id="switch-1-5" />
+                                <label class="switch-button" for="switch-1-5">Toggle</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <label>Clique nos Botões</label>
+
+                            <div class="switch switch-primary switch-labels">
+                                <input name="switch01" class="switch-input" type="checkbox" id="switch-3-1" />
+                                <label class="switch-button" for="switch-3-1">Toggle</label>
+                            </div>
+                            <div class="switch switch-success switch-labels">
+                                <input name="switch02" class="switch-input" type="checkbox" id="switch-3-2" />
+                                <label class="switch-button" for="switch-3-2">Toggle</label>
+                            </div>
+                            <div class="switch switch-info switch-labels">
+                                <input name="switch03" class="switch-input" type="checkbox" id="switch-3-3" />
+                                <label class="switch-button" for="switch-3-3">Toggle</label>
+                            </div>
+                            <div class="switch switch-warning switch-labels">
+                                <input name="switch04" class="switch-input" type="checkbox" id="switch-3-4" />
+                                <label class="switch-button" for="switch-3-4">Toggle</label>
+                            </div>
+                            <div class="switch switch-danger switch-labels">
+                                <input name="switch05" class="switch-input" type="checkbox" id="switch-3-5" />
+                                <label class="switch-button" for="switch-3-5">Toggle</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <!-- Standard button -->
+                            <button type="button" class="btn btn-default">Default</button>
+                            <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                            <button type="button" class="btn btn-primary">Primary</button>
+                            <!-- Indicates a successful or positive action -->
+                            <button type="button" class="btn btn-success">Success</button>
+                            <!-- Contextual button for informational alert messages -->
+                            <button type="button" class="btn btn-info">Info</button>
+                            <!-- Indicates caution should be taken with this action -->
+                            <button type="button" class="btn btn-warning">Warning</button>
+                            <!-- Indicates a dangerous or potentially negative action -->
+                            <button type="button" class="btn btn-danger">Danger</button>
+                            <!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
+                            <button type="button" class="btn btn-link">Link</button>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+
+                            <div class="panel panel-default">
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Treeview - Menu de Documentos</h3>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div id="tree">
+
+                                        <ul id="treeData" style="display:none;">
+
+                                            <li id="id1">Item 1</li>
+
+                                            <li id="id2">Item 2</li>
+
+                                            <li id="id3" class="folder">
+                                                Pasta 3
+                                                <ul>
+                                                    <li id="id3.1">Sub-item 3.1</li>
+                                                    <li id="id3.2">Sub-item 3.2</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="id4" class="folder expanded">
+                                                Documentos
+                                                <ul>
+                                                    <li id="id4.1">Documento 4.1</li>
+                                                    <li id="id4.2">Documento 4.2</li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label>Digite um valor:</label>
+
+                            <input type="text" id="valorProduto" name="valorProduto" value="1.250,50"
+                                class="form-control">
+
+                            <br>
+
+                            <button type="button" onclick="fncConverteValor()">Converter</button>
+
+                            <br><br>
+
+                            <label>Resultado convertido:</label>
+
+                            <input type="text" id="resultado" name="resultado" class="form-control" readonly>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label>Deslize o Botão</label>
+
+                            <div class="switch switch-success switch-labels">
+
+                                <input name="deslizar" class="switch-input" type="checkbox" id="deslizar" />
+
+                                <label class="switch-button" for="deslizar">
+                                    Toggle
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+
+                            <button type="button" id="btnProcessar" class="btn btn-primary">
+                                Processar
+                            </button>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+
+                            <label id="lblLeuContrato">Leu o Contrato e Aceita-o</label>
+
+                            <div class="checkbox">
+
+                                <label>
+
+                                    <input type="checkbox" name="leuContrato" id="leuContrato" value="SIM"
+                                        onchange="fncLeuContrato(this);">
+
+                                    Leu o Contrato e Aceita-o
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+
+                            <label id="txttextocor">Texto com cores</label>
+                            <p class="text-primary">text-primary : Fusce dapibus, tellus ac cursus commodo, tortor
+                                mauris nibh.</p>
+                            <p class="text-warning">text-warning : Etiam porta sem malesuada magna mollis euismod.</p>
+                            <p class="text-danger">text-danger : Donec ullamcorper nulla non metus auctor fringilla.</p>
+                            <p class="text-info">text-info : Aenean eu leo quam. Pellentesque ornare sem lacinia quam
+                                venenatis.</p>
+                            <p class="text-success">text-success : Duis mollis, est non commodo luctus, nisi erat
+                                porttitor ligula.</p>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+
+                            <div id="message-page"></div>
+                            <div id="target-message-page">
+                                <h3>Registro de Produto</h3>
+                                <div>
+                                    <div class="form-group">
+                                        <label for="name">Nome:</label>
+                                        <input type="text" class="form-control" id="targetname" name="targetname">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Description">Descrição:</label>
+                                        <input type="text" class="form-control" id="targetdescription"
+                                            name="targetdescription">
+                                    </div>
+                                    <button class="btn btn-primary" data-show-message-page>Salvar</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 form-group">
+
+                            <label for="phone1">Telefone1</label>
+                            <input type="tel" name="phone1" id="phone1" class="form-control"
+                                placeholder="(14) 99999-9999" title="Informe o telefone principal do cliente">
+
+                            <label for="phone2">Telefone2</label>
+                            <input type="tel" name="phone2" id="phone2" class="form-control"
+                                placeholder="(14) 99999-9999" title="Informe o telefone secundário do cliente">
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+                            <label>Lista de Funcionários</label>
+                            <ul class="list-group">
+                                <li class="list-group-item">MARIA JOSÉ</li>
+                                <li class="list-group-item">CARLOS GOMES</li>
+                                <li class="list-group-item">JOSÉ SILVA</li>
+                                <li class="list-group-item">ANA SOUSA</li>
+                                <li class="list-group-item">PAULA COSTA</li>
+                            </ul>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 form-group">
+                            <label>Lista de Preferências em Compras</label>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <span class="badge badge-warning">14</span>
+                                    Celulares e Smartphones
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge badge-danger">2</span>
+                                    Bicicletas
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge badge-info">1</span>
+                                    Notebook
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge badge-success">4</span>
+                                    TV e Acessórios
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="observacoes"> Observações </label>
+
+                        <textarea name="observacoes" id="observacoes" class="form-control" rows="4"
+                            placeholder="Digite suas observações">
+                                </textarea>
+
+                    </div>
+
+                    <!-- ====================================== -->
+                    <!-- PAI X FILHO                       -->
+                    <!-- ====================================== -->
+
+                    <hr>
+
+                    <label>Funcionários</label>
+
+                    <table tablename="tbFuncionarios" id="tbFuncionarios" noaddbutton="true" nodeletebutton="true"
+                        class="table table-bordered table-striped">
+
+                        <thead>
+
+                            <tr>
+                                <th>Nome do Funcionário</th>
+                                <th style="width:150px;">Idade</th>
+                                <th style="width:100px;">Ação</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <!-- INPUT TEXT FILHO -->
+                                <td>
+
+                                    <input type="text" name="nomeFuncionario" class="form-control"
+                                        placeholder="Digite o nome" required>
+
+                                </td>
+
+                                <!-- INPUT NUMBER FILHO -->
+                                <td>
+
+                                    <input type="number" name="idadeFuncionario" class="form-control"
+                                        placeholder="Idade" min="0" max="120" required>
+
+                                </td>
+
+                                <!-- BOTÃO REMOVER -->
+                                <td>
+                                    <button type="button" class="btn btn-danger" onclick="fnWdkRemoveChild(this)">
+                                        <i class="fluigicon fluigicon-trash"></i>
+                                        Remover
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                    <!-- BOTÃO ADICIONAR FILHO -->
+                    <button type="button" class="btn btn-success" onclick="wdkAddChild('tbFuncionarios')">
+                        <i class="fluigicon fluigicon-plus"></i>
+                        Adicionar Funcionário
+                    </button>
+
+                    <hr>
+
+                    <button type="button" class="btn btn-primary" onclick="alert('Botão clicado!')">
+                        <i class="fluigicon fluigicon-info"></i>
+                        Testar Botão
+                    </button>
+
+                    <button type="reset" class="btn btn-default">Limpar Campos</button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
